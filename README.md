@@ -29,3 +29,14 @@ Pseudo-code
 
 # Players 
   # Can choose which tile number to place their symbol
+
+
+Methods that can be used:
+
+string.sub
+
+Methods used for rendering the board:
+String formatting:
+  %d
+Array methods:
+  array.each_slice(board_size).to_a

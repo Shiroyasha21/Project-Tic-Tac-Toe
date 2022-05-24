@@ -8,19 +8,46 @@ module GameRules
 end
 
 # Player name and symbol
-class Players
-  attr_reader :move
-  attr_accessor :name, :symbol
+class Player
+  attr_accessor :name, :symbol, :player_moves
+
+  def initialize(name, symbol)
+    @name = name
+    @symbol = symbol
+    @player_moves = []
+  end
+
+  def move(move)
+    @move = move
+    @player_moves << move
+  end
+
+  def turn_for_player1
+    puts "#{@name} please choose a numbered tile for your move:"
+
+    input = gets.chomp.to_i
+    while @used_moves.any?(input) || input.zero?
+      puts 'The choosen tile is not available'
+      input = gets.chomp.to_i
+    end
+    move = input
+    @used_moves << move
+    player1.move(move)
+  end
 end
 
 # Board and its purpose
 class Board
-  attr_reader :tiles
+  attr_accessor :tiles
 
   def initialize
-    @form = "| %1d " * 3 + "|"
-    @frame = ("+" + ("-" * 3)) * 3 + "+"
-    @tiles = [*1...10].each_slice(3).to_a
+    @form = '| %1c ' * 3 + '|'
+    @frame = ('+' + ('-' * 3)) * 3 + '+'
+    @tiles = [*'1'...'10'].each_slice(3).to_a
+    render_board
+  end
+
+  def render_board
     @tiles.each do |row|
       puts @frame
       puts(@form % row)
@@ -28,14 +55,16 @@ class Board
     puts @frame
   end
 
-  def change_tiles(move)
+  def change_tiles(move, symbol)
+    move = move.to_s
     @tiles.map! do |row|
       row.each_with_index do |element, index|
         if element == move
-          row[index] = @symbol
+          row[index] = symbol
         end
       end
     end
+    render_board
   end
 end
 
@@ -44,17 +73,34 @@ class TicTacToe
   include GameRules
 
   def initialize
-    get_player_detail
+    take_player_detail
     Board.new
   end
 
   def take_player_detail
     for i in 1..2
-      puts "Please enter player #{i} and symbol"
-      name = gets.chomp
-      symbol = gets.chomp
-      player_2 = Players.new(name, symbol) if i > 1
-      player_1 = Players.new(name, symbol)
+      puts "Please enter player #{i}: "
+
+      @name = gets.chomp.to_s.capitalize
+      player2 = Player.new(@name, 'X') if i > 1
+      player1 = Player.new(@name, 'O')
     end
+  end
+
+  def used_moves
+    @used_moves = []
+  end
+
+  def turn_for_player1
+    puts "#{player1.name} please choose a numbered tile for your move:"
+
+    input = gets.chomp.to_i
+    while @used_moves.any?(input) || input.zero?
+      puts 'The choosen tile is not available'
+      input = gets.chomp.to_i
+    end
+    move = input
+    @used_moves << move
+    player1.move(move)
   end
 end
