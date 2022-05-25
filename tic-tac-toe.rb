@@ -65,11 +65,14 @@ class TicTacToe
   def initialize
     take_player_detail
     @game = Board.new
+    out_of_moves
     play_game
   end
 
   def play_game
-    while @win_status == false || @out_of_moves == false
+    take_player_move(@player1)
+    take_player_move(@player2)
+    until @win_status == true || @out_of_moves == true
       take_player_move(@player1)
       check_for_win
       out_of_moves
@@ -80,6 +83,21 @@ class TicTacToe
       out_of_moves
     end
     game_over
+  end
+  
+  def check_for_win
+    @winner = ''
+    @win_status = false
+    if check_for_winner(@player1.player_moves)
+      @winner.concat(@player1.name)
+      @win_status = true
+      return true
+    elsif check_for_winner(@player2.player_moves)
+      @winner.concat(@player2.name)
+      @win_status = true
+      return true
+    end
+    false
   end
 
   def out_of_moves
@@ -119,6 +137,7 @@ class TicTacToe
   end
 
   def take_player_move(player)
+    puts ''
     puts "#{player.name} please choose a numbered tile for your move:"
 
     @move_input = gets.chomp.to_i
@@ -139,21 +158,6 @@ class TicTacToe
     player.move(move)
     symbol = player.symbol
     @game.change_tiles(move, symbol)
-  end
-
-  def check_for_win
-    @winner = ''
-    @win_status = false
-    if check_for_winner(player1.player_moves)
-      @winner.concat(player1.name)
-      @win_status = true
-      return true
-    elsif check_for_winner(player2.player_moves)
-      @winner.concat(player2.name)
-      @win_status = true
-      return true
-    end
-    false
   end
 end
 
