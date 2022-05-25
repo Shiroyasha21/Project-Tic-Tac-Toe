@@ -1,44 +1,16 @@
 # Project-Tic-Tac-Toe
 
-Pseudo-code
+This is one of the projects in the Ruby course of The Odin Project. 
+It is a terminal game of Tic Tac Toe. Two players are required in this game since there's no computer enemy for the game. 
 
-# Game rules
-  # Win conditions
-    # Horizontal
-      # 1 - 2 - 3
-      # 4 - 5 - 6
-      # 7 - 8 - 9
-    # Vertical
-      # 1 - 4 - 7
-      # 2 - 5 - 8
-      # 3 - 6 - 9
-    # Diagonal
-      # 1 - 5 - 9
-      # 3 - 5 - 7  
+This project made used of the Object-Oriented Programming paradigm. As a beginner, I am not sure if I have properly used the concept. 
 
-  # Draw conditions
-    # Both players cannot achieve winning conditions 
-    # Both players ran out of moves
-#
-
-# Board creation and purpose
-  # Make board tiles as corresponding numbers from 1 - 9
-    # Change tiles everytime a player moves 
-  # Show the board every player move
-  # Record each player moves
-
-# Players 
-  # Can choose which tile number to place their symbol
-  # Player 1 (X) maximum move is 5 and the last move when its a draw
-  # Player 2 (O) maximum move is 4
-
-
-Methods that can be used:
-
-string.sub
+Looking deeper at the code, all methods does not make use of private access since the default accessibility is public. Although I made sure that each class is independent from each other aside from the TicTacToe class which initialize the game, I am not sure if it really follows Object-Oriented programming. 
 
 Methods used for rendering the board:
+terminal clearing:
+  puts "\e[H\e[2J"
 String formatting:
-  %d
+  %d and the use of %
 Array methods:
   array.each_slice(board_size).to_a

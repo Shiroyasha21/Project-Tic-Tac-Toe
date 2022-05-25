@@ -35,11 +35,13 @@ class Board
   end
 
   def render_board
+    puts "\e[H\e[2J"
     @tiles.each do |row|
       puts @frame
       puts(@form % row)
     end
     puts @frame
+    puts ''
   end
 
   def change_tiles(move, symbol)
@@ -66,12 +68,12 @@ class TicTacToe
     take_player_detail
     @game = Board.new
     out_of_moves
+    take_player_move(@player1)
+    take_player_move(@player2)
     play_game
   end
 
   def play_game
-    take_player_move(@player1)
-    take_player_move(@player2)
     until @win_status == true || @out_of_moves == true
       take_player_move(@player1)
       check_for_win
@@ -84,7 +86,7 @@ class TicTacToe
     end
     game_over
   end
-  
+
   def check_for_win
     @winner = ''
     @win_status = false
@@ -106,6 +108,7 @@ class TicTacToe
   end
 
   def game_over
+    @@used_moves = []
     if @win_status == true
       puts "#{@winner} win the game."
     else
@@ -116,7 +119,7 @@ class TicTacToe
 
   def game_restart
     puts 'Want to start a new game? Enter Y if yes and N if no: '
-    answer = gets.chomp
+    answer = gets.chomp.upcase
 
     if answer == 'Y'
       TicTacToe.new
