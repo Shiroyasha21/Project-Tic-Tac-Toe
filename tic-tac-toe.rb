@@ -28,19 +28,22 @@ class Board
   attr_accessor :tiles
 
   def initialize
-    @form = '| %1c ' * 3 + '|'
-    @frame = ('+' + ('-' * 3)) * 3 + '+'
+    @form = (' ' * 6) + (' %1c | %1c | %1c ')
+    @frame = (' ' * 6) + (('-' * 3) + '+') * 2 + ('-' * 3)
     @tiles = [*'1'...'10'].each_slice(3).to_a
     render_board
   end
 
   def render_board
     puts "\e[H\e[2J"
-    @tiles.each do |row|
-      puts @frame
-      puts(@form % row)
+    @tiles.each_with_index do |row, index|
+      if index.zero?
+        puts(@form % row)
+      else
+        puts @frame
+        puts(@form % row)
+      end
     end
-    puts @frame
     puts ''
   end
 
