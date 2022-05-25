@@ -29,6 +29,8 @@ Pseudo-code
 
 # Players 
   # Can choose which tile number to place their symbol
+  # Player 1 (X) maximum move is 5 and the last move when its a draw
+  # Player 2 (O) maximum move is 4
 
 
 Methods that can be used:

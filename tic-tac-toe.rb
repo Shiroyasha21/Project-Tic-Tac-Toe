@@ -21,19 +21,6 @@ class Player
     @move = move
     @player_moves << move
   end
-
-  def turn_for_player1
-    puts "#{@name} please choose a numbered tile for your move:"
-
-    input = gets.chomp.to_i
-    while @used_moves.any?(input) || input.zero?
-      puts 'The choosen tile is not available'
-      input = gets.chomp.to_i
-    end
-    move = input
-    @used_moves << move
-    player1.move(move)
-  end
 end
 
 # Board and its purpose
@@ -71,36 +58,88 @@ end
 # Starting the game
 class TicTacToe
   include GameRules
+  attr_reader :used_moves
+
+  @@used_moves = []
 
   def initialize
     take_player_detail
-    Board.new
+    @game = Board.new
+    play_game
+  end
+
+  def play_game
+    3.times do
+      take_player_move(@player1)
+      take_player_move(@player2)
+    end
+    
+    check_for_win
+    
+    if check_for_win == true
+      puts "#{@winner} won the game."
+      game_over
+    else
+      while @win_status == false || @out_of_moves == false do
+        take_player_move(@player1)
+        check_for_win
+        break if @win_status == true
+        take_player_move(@player2)
+        check_for_win
+      end
+      
+
   end
 
   def take_player_detail
     for i in 1..2
       puts "Please enter player #{i}: "
 
-      @name = gets.chomp.to_s.capitalize
-      player2 = Player.new(@name, 'X') if i > 1
-      player1 = Player.new(@name, 'O')
+      name = gets.chomp.to_s.capitalize
+      return @player2 = Player.new(name, 'O') if i == 2
+
+      @player1 = Player.new(name, 'X')
     end
   end
 
-  def used_moves
-    @used_moves = []
+  def take_player_move(player)
+    puts "#{player.name} please choose a numbered tile for your move:"
+
+    @move_input = gets.chomp.to_i
+    check_move
+
+    register_move(player, @move_input)
   end
 
-  def turn_for_player1
-    puts "#{player1.name} please choose a numbered tile for your move:"
-
-    input = gets.chomp.to_i
-    while @used_moves.any?(input) || input.zero?
+  def check_move
+    while @@used_moves.any?(@move_input) || @move_input.zero?
       puts 'The choosen tile is not available'
-      input = gets.chomp.to_i
+      @move_input = gets.chomp.to_i
     end
-    move = input
-    @used_moves << move
-    player1.move(move)
+  end
+
+  def register_move(player, move)
+    @@used_moves << move
+    player.move(move)
+    symbol = player.symbol
+    @game.change_tiles(move, symbol)
+  end
+
+  def check_for_win
+    @winner = ''
+    @win_status = false
+    if check_for_winner(player1.player_moves)
+      @winner.concat(player1.name)
+      @win_status = true
+      true
+    elsif check_for_winner(player2.player_moves)
+      @winner.concat(player2.name)
+      @win_status = true
+      true
+    else 
+      false
+    end
   end
 end
+
+TicTacToe.new
