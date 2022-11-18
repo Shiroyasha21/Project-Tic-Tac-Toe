@@ -1,64 +1,8 @@
-# The module has the rules of the Tic Tac Toe game and the winning condition
-module GameRules
-  def check_for_winner(array_of_moves)
-    array = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 6],
-            [3, 6, 9], [1, 5, 9], [3, 5, 7]]
-    array.any? { |move| move.intersection(array_of_moves) == move }
-  end
-end
+# frozen_string_literal: false
 
-# Player name and symbol
-class Player
-  attr_accessor :name, :symbol, :player_moves
-
-  def initialize(name, symbol)
-    @name = name
-    @symbol = symbol
-    @player_moves = []
-  end
-
-  def move(move)
-    @move = move
-    @player_moves << move
-  end
-end
-
-# Board and its purpose
-class Board
-  attr_accessor :tiles
-
-  def initialize
-    @form = (' ' * 6) + (' %1c | %1c | %1c ')
-    @frame = (' ' * 6) + (('-' * 3) + '+') * 2 + ('-' * 3)
-    @tiles = [*'1'...'10'].each_slice(3).to_a
-    render_board
-  end
-
-  def render_board
-    puts "\e[H\e[2J"
-    @tiles.each_with_index do |row, index|
-      if index.zero?
-        puts(@form % row)
-      else
-        puts @frame
-        puts(@form % row)
-      end
-    end
-    puts ''
-  end
-
-  def change_tiles(move, symbol)
-    move = move.to_s
-    @tiles.map! do |row|
-      row.each_with_index do |element, index|
-        if element == move
-          row[index] = symbol
-        end
-      end
-    end
-    render_board
-  end
-end
+require_relative 'board'
+require_relative 'player'
+require_relative 'gamerules'
 
 # Starting the game
 class TicTacToe
@@ -166,5 +110,3 @@ class TicTacToe
     @game.change_tiles(move, symbol)
   end
 end
-
-TicTacToe.new
